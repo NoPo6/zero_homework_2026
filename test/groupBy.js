@@ -47,4 +47,43 @@ QUnit.module('Тестируем функцию groupBy', () => {
             ]
         }, 'Все объекты должны быть сгруппированы под одним значением');
     });
+
+    // Два моих теста
+    QUnit.test('Работает правильно, когда имеется только один объект', (assert) => {
+        const data = [
+            { id: 1, category: 'fruit', name: 'apple' }
+        ];
+        const result = groupBy(data, 'category');
+
+        assert.deepEqual(result, {
+            fruit: [
+                { id: 1, category: 'fruit', name: 'apple' }
+            ]
+        }, 'Должен вернуться тот же самый объект');
+    });
+
+    QUnit.test('Работает правильно с группировкой по полю name', (assert) => {
+        const data = [
+            { id: 1, category: 'fruit', name: 'apple' },
+            { id: 2, category: 'fruit', name: 'banana' },
+            { id: 3, category: 'fruit', name: 'apple' },  
+            { id: 4, category: 'vegetable', name: 'carrot' },
+            { id: 5, category: 'vegetable', name: 'carrot' }
+        ];
+        const result = groupBy(data, 'name');
+
+        assert.deepEqual(result, {
+            apple: [
+                { id: 1, category: 'fruit', name: 'apple' },
+                { id: 3, category: 'fruit', name: 'apple' }
+            ],
+            banana: [
+                { id: 2, category: 'fruit', name: 'banana' }
+            ],
+            carrot: [
+                { id: 4, category: 'vegetable', name: 'carrot' },
+                { id: 5, category: 'vegetable', name: 'carrot' }
+            ]
+        }, 'Объекты должны быть сгруппированы по имени');
+    });
 });
