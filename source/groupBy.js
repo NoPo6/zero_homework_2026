@@ -24,6 +24,12 @@
  * // }
  */
 function groupBy(array, key) {
+    if (!Array.isArray(array)) {
+        throw new TypeError('Первый аргумент должен быть массивом');
+    }
+    if (typeof key !== 'string') {
+        throw new TypeError('Второй аргумент должен быть строкой')
+    }
     if (array.length === 0) {
         return {};
     }
@@ -33,7 +39,8 @@ function groupBy(array, key) {
         if (Object.hasOwn(result, groupKey)) {
             result[groupKey].push(dict);
         } else {
-            result[groupKey] = [dict];
+            result[groupKey] = [];
+            result[groupKey].push(dict);
         }
     }
     return result;
