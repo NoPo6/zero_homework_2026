@@ -100,8 +100,53 @@ QUnit.module('Тестируем функцию groupBy', () => {
         const data = [{ id: 1, category: 'fruit' }];
         assert.throws(
             () => groupBy(data, 123),
-            new TypeError('Второй аргумент должен быть строкой'),
+            new TypeError('Второй аргумент должен быть непустой строкой'),
             'Второй аргумент должен быть строкой'
+        );
+    });
+
+    // Еще 4 дополнительных теста
+    QUnit.test('Выбрасывает TypeError, если второй аргумент — пустая строка', (assert) => {
+        const data = [{ id: 1, category: 'fruit' }];
+        assert.throws(
+            () => groupBy(data, ''),
+            new TypeError('Второй аргумент должен быть непустой строкой'),
+            'Пустая строка недопустима'
+        );
+    });
+
+    QUnit.test('Выбрасывает TypeError, если в массиве лежат примитивы', (assert) => {
+        const data = ['lol', 'kek', 'cheburek', 228];
+        assert.throws(
+            () => groupBy(data, 'category'),
+            new TypeError('Все элементы массива должны являться объектами'),
+            'Элементы массива должны быть объектами'
+        );
+    });
+
+    QUnit.test('Выбрасывает TypeError, если у одного из объектов нет ключевого поля', (assert) => {
+        const data = [
+            { id: 1, category: 'fruit', name: 'apple' },
+            { id: 2, category: 'fruit', hisNameIsJohnCena: 'banana' },
+            { id: 3, category: 'fruit', name: 'apple' }
+        ];
+        assert.throws(
+            () => groupBy(data, 'name'),
+            new TypeError('У объекта отсутствует поле "name"'),
+            'У одного из объектов отсутствует ключевое поле'
+        );
+    });
+
+    QUnit.test('Выбрасывает TypeError, если у объекта пустое ключевое поле', (assert) => {
+        const data = [
+            { id: 1, category: 'fruit', name: 'apple' },
+            { id: 2, category: 'fruit', name: '' },
+            { id: 3, category: 'fruit', name: 'apple' }
+        ];
+        assert.throws(
+            () => groupBy(data, 'name'),
+            new TypeError('Значение поля "name" не должно быть пустым'),
+            'У одного из объектов пустое ключевое поле'
         );
     });
 });

@@ -23,25 +23,33 @@
  * //   ]
  * // }
  */
-function groupBy(array, key) {
+const groupBy = (array, key) => {
     if (!Array.isArray(array)) {
-        throw new TypeError('Первый аргумент должен быть массивом');
+        throw new TypeError("Первый аргумент должен быть массивом");
     }
-    if (typeof key !== 'string') {
-        throw new TypeError('Второй аргумент должен быть строкой')
+    if (typeof key !== 'string' || key.trim() === '') {
+        throw new TypeError("Второй аргумент должен быть непустой строкой");
     }
-    if (array.length === 0) {
+    if (!array.length) {
         return {};
     }
-    const result = {};
-    for (const dict of array) {
-        const groupKey = dict[key];
-        if (Object.hasOwn(result, groupKey)) {
-            result[groupKey].push(dict);
-        } else {
-            result[groupKey] = [];
-            result[groupKey].push(dict);
+    const result = array.reduce((acc, item) => {
+        if (item === null || typeof item !== "object") {
+            throw new TypeError("Все элементы массива должны являться объектами");
+        } 
+        if (!Object.hasOwn(item, key)) {
+            throw new TypeError(`У объекта отсутствует поле "${key}"`);
         }
-    }
+        if (item[key] == null || item[key] === '') {
+            throw new TypeError(`Значение поля "${key}" не должно быть пустым`);
+        }
+        const groupKey = item[key];
+        if (Object.hasOwn(acc, groupKey)) {
+            acc[groupKey].push(item);
+        } else {
+            acc[groupKey] = [item];
+        }
+        return acc;
+    }, {});    
     return result;
 }
